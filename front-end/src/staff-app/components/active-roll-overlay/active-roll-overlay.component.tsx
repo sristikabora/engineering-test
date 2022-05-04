@@ -8,10 +8,13 @@ export type ActiveRollAction = "filter" | "exit"
 interface Props {
   isActive: boolean
   onItemClick: (action: ActiveRollAction, value?: string) => void
+  rollTotals: { present: number; absent: number; late: number }
+  totalStudents: number
+  filterByOverlayBtn: (type: string) => void
 }
 
 export const ActiveRollOverlay: React.FC<Props> = (props) => {
-  const { isActive, onItemClick } = props
+  const { isActive, onItemClick, rollTotals, totalStudents, filterByOverlayBtn } = props
 
   return (
     <S.Overlay isActive={isActive}>
@@ -19,11 +22,12 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
         <div>Class Attendance</div>
         <div>
           <RollStateList
+            filterByOverlayBtn={filterByOverlayBtn}
             stateList={[
-              { type: "all", count: 0 },
-              { type: "present", count: 0 },
-              { type: "late", count: 0 },
-              { type: "absent", count: 0 },
+              { type: "all", count: totalStudents },
+              { type: "present", count: rollTotals.present },
+              { type: "late", count: rollTotals.late },
+              { type: "absent", count: rollTotals.absent },
             ]}
           />
           <div style={{ marginTop: Spacing.u6 }}>

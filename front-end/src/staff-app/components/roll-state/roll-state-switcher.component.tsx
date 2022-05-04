@@ -6,8 +6,10 @@ interface Props {
   initialState?: RolllStateType
   size?: number
   onStateChange?: (newState: RolllStateType) => void
+  rollLister: any
+  personId: number
 }
-export const RollStateSwitcher: React.FC<Props> = ({ initialState = "unmark", size = 40, onStateChange }) => {
+export const RollStateSwitcher: React.FC<Props> = ({ initialState = "unmark", size = 40, onStateChange, rollLister, personId }) => {
   const [rollState, setRollState] = useState(initialState)
 
   const nextState = () => {
@@ -20,6 +22,8 @@ export const RollStateSwitcher: React.FC<Props> = ({ initialState = "unmark", si
   const onClick = () => {
     const next = nextState()
     setRollState(next)
+    rollLister(next, personId)
+    console.log(rollState, next)
     if (onStateChange) {
       onStateChange(next)
     }

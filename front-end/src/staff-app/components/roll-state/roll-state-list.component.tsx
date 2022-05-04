@@ -9,8 +9,9 @@ interface Props {
   stateList: StateList[]
   onItemClick?: (type: ItemType) => void
   size?: number
+  filterByOverlayBtn: (type: string) => void
 }
-export const RollStateList: React.FC<Props> = ({ stateList, size = 14, onItemClick }) => {
+export const RollStateList: React.FC<Props> = ({ stateList, size = 14, onItemClick, filterByOverlayBtn }) => {
   const onClick = (type: ItemType) => {
     if (onItemClick) {
       onItemClick(type)
@@ -23,7 +24,14 @@ export const RollStateList: React.FC<Props> = ({ stateList, size = 14, onItemCli
         if (s.type === "all") {
           return (
             <S.ListItem key={i}>
-              <FontAwesomeIcon icon="users" size="sm" style={{ cursor: "pointer" }} onClick={() => onClick(s.type)} />
+              <FontAwesomeIcon
+                icon="users"
+                size="sm"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  filterByOverlayBtn(s.type)
+                }}
+              />
               <span>{s.count}</span>
             </S.ListItem>
           )
@@ -31,7 +39,13 @@ export const RollStateList: React.FC<Props> = ({ stateList, size = 14, onItemCli
 
         return (
           <S.ListItem key={i}>
-            <RollStateIcon type={s.type} size={size} onClick={() => onClick(s.type)} />
+            <RollStateIcon
+              type={s.type}
+              size={size}
+              onClick={() => {
+                filterByOverlayBtn(s.type)
+              }}
+            />
             <span>{s.count}</span>
           </S.ListItem>
         )

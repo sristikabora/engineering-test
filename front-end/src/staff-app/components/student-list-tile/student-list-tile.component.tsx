@@ -9,8 +9,9 @@ import { RollStateSwitcher } from "staff-app/components/roll-state/roll-state-sw
 interface Props {
   isRollMode?: boolean
   student: Person
+  rollLister: any
 }
-export const StudentListTile: React.FC<Props> = ({ isRollMode, student }) => {
+export const StudentListTile: React.FC<Props> = ({ isRollMode, student, rollLister }) => {
   return (
     <S.Container>
       <S.Avatar url={Images.avatar}></S.Avatar>
@@ -19,7 +20,7 @@ export const StudentListTile: React.FC<Props> = ({ isRollMode, student }) => {
       </S.Content>
       {isRollMode && (
         <S.Roll>
-          <RollStateSwitcher />
+          <RollStateSwitcher rollLister={rollLister} personId={PersonHelper.getId(student)} />
         </S.Roll>
       )}
     </S.Container>

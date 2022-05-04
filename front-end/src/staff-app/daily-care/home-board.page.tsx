@@ -13,27 +13,118 @@ import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active
 export const HomeBoardPage: React.FC = () => {
   const [isRollMode, setIsRollMode] = useState(false)
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
+  const [sortOrder, setSortOrder] = useState("initial")
+  const [sortBy, setSortBy] = useState("first_name")
+  const [currentList, setCurrentList] = useState([{ id: 0, first_name: "", last_name: "" }])
+  const [currentStr, setCurrentStr] = useState("")
+  const [rollStateListWithIds, setrollStateListWithIds] = useState([{ id: 0, roll_state: "initial" }])
+  const [rollTotals, setRollTotals] = useState({ present: 0, absent: 0, late: 0 })
 
   useEffect(() => {
     void getStudents()
   }, [getStudents])
 
+  useEffect(() => {
+    if (data != undefined) {
+      let a = data.students
+      setCurrentList(a)
+    }
+  }, [data])
+
+  useEffect(() => {
+    let present = 0
+    let absent = 0
+    let late = 0
+    rollStateListWithIds.forEach(function (s) {
+      if (s.roll_state === "present") {
+        present++
+      } else if (s.roll_state === "absent") {
+        absent++
+      } else if (s.roll_state === "late") {
+        late++
+      }
+    })
+    setRollTotals({ present: present, absent: absent, late: late })
+  }, [rollStateListWithIds])
+
+  const sortAsc = function (list: any, by: string) {
+    list.sort((a: any, b: any) => (a[by] > b[by] ? 1 : -1))
+    return list
+  }
+  const sortDsc = function (list: any, by: string) {
+    list.sort((a: any, b: any) => (a[by] < b[by] ? 1 : -1))
+    return list
+  }
+
   const onToolbarAction = (action: ToolbarAction) => {
     if (action === "roll") {
       setIsRollMode(true)
+    } else if (action === "sortToggle") {
+      let a = currentList
+      if (sortOrder === "initial" || sortOrder === "asc") {
+        a = sortAsc(a, sortBy)
+        setSortOrder("dsc")
+      } else {
+        a = sortDsc(a, sortBy)
+        setSortOrder("asc")
+      }
+      setCurrentList(a)
+    } else if (action === "sortBy") {
+      let a = currentList
+      if (sortOrder === "initial" || sortOrder === "asc") {
+        a = sortAsc(a, sortBy)
+      } else if (sortOrder === "dsc") {
+        a = sortDsc(a, sortBy)
+      }
+      setSortBy(sortBy === "first_name" ? "last_name" : "first_name")
+      setCurrentList(a)
     }
   }
 
   const onActiveRollAction = (action: ActiveRollAction) => {
     if (action === "exit") {
+      setRollTotals({ present: 0, absent: 0, late: 0 })
+      setrollStateListWithIds([{ id: 0, roll_state: "initial" }])
       setIsRollMode(false)
     }
+  }
+
+  const search = (what: number, array: Array<{ id: number; roll_state: string }>) => array.find((element) => element.id === what)
+
+  const rollLister = (roll: string, id: number) => {
+    let list = rollStateListWithIds
+    let listFiltered: Array<{ id: number; roll_state: string }> = list.filter(function (obj) {
+      return obj.id !== 0
+    })
+    const found = search(id, listFiltered)
+    if (found) {
+      found.roll_state = roll
+    } else {
+      listFiltered.push({ id: id, roll_state: roll })
+    }
+    setrollStateListWithIds(listFiltered)
+  }
+
+  const handleSubmit = function (e: Event) {
+    e.preventDefault()
+    let newArr: Array<{ id: number; first_name: string; last_name: string }> = []
+    data?.students.map(function (s) {
+      const fullname = s.first_name + " " + s.last_name
+      if (fullname.toLowerCase().includes(currentStr.toLowerCase())) {
+        newArr.push(s)
+      }
+    })
+    setCurrentList(newArr)
+  }
+
+  const filterByOverlayBtn = (type: string) => {
+    console.log(type)
   }
 
   return (
     <>
       <S.PageContainer>
-        <Toolbar onItemClick={onToolbarAction} />
+        <Toolbar onItemClick={onToolbarAction} sortorder={sortOrder} sortby={sortBy} handleSubmit={handleSubmit} currentStr={currentStr} setCurrentStr={setCurrentStr} />
 
         {loadState === "loading" && (
           <CenteredContainer>
@@ -41,10 +132,10 @@ export const HomeBoardPage: React.FC = () => {
           </CenteredContainer>
         )}
 
-        {loadState === "loaded" && data?.students && (
+        {loadState === "loaded" && data?.students && Object.keys(currentList[0]) && (
           <>
-            {data.students.map((s) => (
-              <StudentListTile key={s.id} isRollMode={isRollMode} student={s} />
+            {currentList.map((s) => (
+              <StudentListTile key={s.id} isRollMode={isRollMode} student={s} rollLister={rollLister} />
             ))}
           </>
         )}
@@ -55,21 +146,44 @@ export const HomeBoardPage: React.FC = () => {
           </CenteredContainer>
         )}
       </S.PageContainer>
-      <ActiveRollOverlay isActive={isRollMode} onItemClick={onActiveRollAction} />
+      {loadState === "loaded" && data?.students && (
+        <ActiveRollOverlay
+          isActive={isRollMode}
+          onItemClick={onActiveRollAction}
+          rollTotals={rollTotals}
+          totalStudents={data.students.length}
+          filterByOverlayBtn={filterByOverlayBtn}
+        />
+      )}
     </>
   )
 }
 
-type ToolbarAction = "roll" | "sort"
+type ToolbarAction = "roll" | "sortToggle" | "sortBy"
 interface ToolbarProps {
   onItemClick: (action: ToolbarAction, value?: string) => void
+  sortorder: string
+  sortby: string
+  handleSubmit: any
+  currentStr: string
+  setCurrentStr: any
 }
+
 const Toolbar: React.FC<ToolbarProps> = (props) => {
-  const { onItemClick } = props
+  const { onItemClick, sortorder, sortby, handleSubmit, currentStr, setCurrentStr } = props
+
   return (
     <S.ToolbarContainer>
-      <div onClick={() => onItemClick("sort")}>First Name</div>
-      <div>Search</div>
+      <S.Button onClick={() => onItemClick("sortToggle")}>{sortorder === "initial" || sortorder === "asc" ? "Ascending" : "Descending"}</S.Button>
+      <S.Button onClick={() => onItemClick("sortBy")}>{sortby === "initial" || sortby === "first_name" ? "By First Name" : "By Last Name"}</S.Button>
+      <div>
+        <form onSubmit={handleSubmit}>
+          <input type="text" onChange={(event) => setCurrentStr(event.target.value)} id="searchedInput" placeholder="Search.." name="search" />
+          <button type="submit">
+            <i className="fa fa-search"></i>
+          </button>
+        </form>
+      </div>
       <S.Button onClick={() => onItemClick("roll")}>Start Roll</S.Button>
     </S.ToolbarContainer>
   )
