@@ -9,16 +9,18 @@ import { Person } from "shared/models/person"
 import { useApi } from "shared/hooks/use-api"
 import { StudentListTile } from "staff-app/components/student-list-tile/student-list-tile.component"
 import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active-roll-overlay/active-roll-overlay.component"
+import { RollInput } from "shared/models/roll"
 
-export const HomeBoardPage: React.FC = () => {
+export const HomeBoardPage: React.FC = (props) => {
   const [isRollMode, setIsRollMode] = useState(false)
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
   const [sortOrder, setSortOrder] = useState("initial")
   const [sortBy, setSortBy] = useState("first_name")
   const [currentList, setCurrentList] = useState([{ id: 0, first_name: "", last_name: "" }])
   const [currentStr, setCurrentStr] = useState("")
-  const [rollStateListWithIds, setrollStateListWithIds] = useState([{ id: 0, roll_state: "initial" }])
+  const [rollStateListWithIds, setrollStateListWithIds] = useState([{ student_id: 0, roll_state: "initial" }])
   const [rollTotals, setRollTotals] = useState({ present: 0, absent: 0, late: 0 })
+  const [setRole] = useApi<{ student: RollInput }>({ url: "save-roll" })
 
   useEffect(() => {
     void getStudents()
@@ -32,9 +34,15 @@ export const HomeBoardPage: React.FC = () => {
   }, [data])
 
   useEffect(() => {
-    let present = 0
-    let absent = 0
-    let late = 0
+    return () => {
+      setIsRollMode(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    let present: number, absent: number, late: number
+    present = absent = late = 0
+
     rollStateListWithIds.forEach(function (s) {
       if (s.roll_state === "present") {
         present++
@@ -83,24 +91,29 @@ export const HomeBoardPage: React.FC = () => {
 
   const onActiveRollAction = (action: ActiveRollAction) => {
     if (action === "exit") {
-      setRollTotals({ present: 0, absent: 0, late: 0 })
-      setrollStateListWithIds([{ id: 0, roll_state: "initial" }])
       setIsRollMode(false)
+      if (data?.students) {
+        setCurrentList(data.students)
+      }
+      setRollTotals({ present: 0, absent: 0, late: 0 })
+      setrollStateListWithIds([{ student_id: 0, roll_state: "initial" }])
+    } else if (action === "complete") {
+      setRole({ student_roll_states: rollStateListWithIds })
     }
   }
 
-  const search = (what: number, array: Array<{ id: number; roll_state: string }>) => array.find((element) => element.id === what)
+  const search = (what: number, array: Array<{ student_id: number; roll_state: string }>) => array.find((element) => element.student_id === what)
 
   const rollLister = (roll: string, id: number) => {
     let list = rollStateListWithIds
-    let listFiltered: Array<{ id: number; roll_state: string }> = list.filter(function (obj) {
-      return obj.id !== 0
+    let listFiltered: Array<{ student_id: number; roll_state: string }> = list.filter(function (obj) {
+      return obj.student_id !== 0
     })
     const found = search(id, listFiltered)
     if (found) {
       found.roll_state = roll
     } else {
-      listFiltered.push({ id: id, roll_state: roll })
+      listFiltered.push({ student_id: id, roll_state: roll })
     }
     setrollStateListWithIds(listFiltered)
   }
@@ -117,8 +130,26 @@ export const HomeBoardPage: React.FC = () => {
     setCurrentList(newArr)
   }
 
-  const filterByOverlayBtn = (type: string) => {
-    console.log(type)
+  const filterByOverlayBtn = (state: string) => {
+    let a = data?.students
+    if (state !== "all") {
+      let listOfStudents: Array<{ id: number; first_name: string; last_name: string }> = []
+      let idsWithState = rollStateListWithIds.filter((s) => s.roll_state === state)
+      if (a && idsWithState && idsWithState.length > 0) {
+        a?.forEach((s) => {
+          idsWithState.forEach((x) => {
+            if (s.id === x.student_id) {
+              listOfStudents.push(s)
+            }
+          })
+        })
+      }
+      setCurrentList(listOfStudents)
+    } else {
+      if (a) {
+        setCurrentList(a)
+      }
+    }
   }
 
   return (
@@ -132,7 +163,7 @@ export const HomeBoardPage: React.FC = () => {
           </CenteredContainer>
         )}
 
-        {loadState === "loaded" && data?.students && Object.keys(currentList[0]) && (
+        {loadState === "loaded" && data?.students && currentList.length > 0 && Object.keys(currentList[0]) && (
           <>
             {currentList.map((s) => (
               <StudentListTile key={s.id} isRollMode={isRollMode} student={s} rollLister={rollLister} />
@@ -180,7 +211,7 @@ const Toolbar: React.FC<ToolbarProps> = (props) => {
         <form onSubmit={handleSubmit}>
           <input type="text" onChange={(event) => setCurrentStr(event.target.value)} id="searchedInput" placeholder="Search.." name="search" />
           <button type="submit">
-            <i className="fa fa-search"></i>
+            <i className="fa fa-search" style={{ color: "black" }}></i>
           </button>
         </form>
       </div>

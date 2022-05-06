@@ -23,7 +23,6 @@ export const RollStateSwitcher: React.FC<Props> = ({ initialState = "unmark", si
     const next = nextState()
     setRollState(next)
     rollLister(next, personId)
-    console.log(rollState, next)
     if (onStateChange) {
       onStateChange(next)
     }

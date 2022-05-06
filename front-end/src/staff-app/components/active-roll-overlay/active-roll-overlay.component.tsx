@@ -3,8 +3,9 @@ import styled from "styled-components"
 import Button from "@material-ui/core/Button"
 import { BorderRadius, Spacing } from "shared/styles/styles"
 import { RollStateList } from "staff-app/components/roll-state/roll-state-list.component"
+import { Link } from "react-router-dom"
 
-export type ActiveRollAction = "filter" | "exit"
+export type ActiveRollAction = "filter" | "exit" | "complete"
 interface Props {
   isActive: boolean
   onItemClick: (action: ActiveRollAction, value?: string) => void
@@ -30,13 +31,15 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
               { type: "absent", count: rollTotals.absent },
             ]}
           />
-          <div style={{ marginTop: Spacing.u6 }}>
+          <div style={{ marginTop: Spacing.u6, display: "flex" }} className="activeroll-actionwrap">
             <Button color="inherit" onClick={() => onItemClick("exit")}>
               Exit
             </Button>
-            <Button color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("exit")}>
-              Complete
-            </Button>
+            <Link to="/staff/activity">
+              <p color="inherit" style={{ marginLeft: Spacing.u2, color: "white" }} onClick={() => onItemClick("complete")}>
+                Complete
+              </p>
+            </Link>
           </div>
         </div>
       </S.Content>
