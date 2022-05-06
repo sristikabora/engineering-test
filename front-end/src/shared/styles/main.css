@@ -1,0 +1,80 @@
+body {
+  background: linear-gradient(0deg, rgb(255 200 200 / 44%), rgb(255 255 255 / 89%)), url(/src/assets/images/pexels-arthur-krijgsman-4019754.jpg);
+  background-size: cover;
+}
+
+button {
+  outline: none !important;
+}
+
+.roll_application {
+  min-height: 100vh;
+}
+
+.roll_application .rollList__wrap {
+  border-radius: 10px;
+  max-width: 900px;
+  margin: 50px auto;
+}
+
+.roll_application .rollDetails {
+  border-radius: 10px 10px 0 0;
+  background-color: #343f64;
+  padding: 10px 0;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.roll_application .rollDetails h2,
+.roll_application .rollDetails h3 {
+  text-align: center;
+  font-size: 20px;
+  color: white;
+}
+
+.roll_application .rollList__wrap .table {
+  border-collapse: collapse;
+  border-radius: 10px;
+  box-shadow: 0px 10px 40px #af595973;
+}
+
+.roll_application .rollList__wrap .table .thead-dark th {
+  background-color: #2b4d6f;
+}
+
+.roll_application .rollList__wrap table tbody {
+  background-color: #ffffffde !important;
+}
+
+.roll_application .imgwicons__headlinewrap {
+  position: relative;
+  padding-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin: 40px auto;
+}
+
+.roll_application .imgwicons__headlinewrap .imgwicons__headline {
+  color: #2b4d6f;
+  text-transform: uppercase;
+  font-size: 40px;
+  line-height: 1.6;
+  font-weight: bold;
+  text-align: center;
+}
+
+.roll_application .imgwicons__headlinewrap .imgwicons__underline {
+  width: 176.25px;
+  height: 5px;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  background-color: #b8db15;
+}

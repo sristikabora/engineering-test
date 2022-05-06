@@ -45,6 +45,7 @@ const S = {
     border-radius: ${BorderRadius.rounded};
     width: ${({ size }) => size}px;
     height: ${({ size }) => size}px;
+    padding: 10px;
     cursor: ${({ clickable }) => (clickable ? "pointer" : undefined)};
   `,
 }
