@@ -11,12 +11,6 @@ export const ActivityPage: React.FC = () => {
     void getActivities()
   }, [getActivities])
 
-  useEffect(() => {
-    if (data != undefined) {
-      console.log("activities", data.activity)
-    }
-  }, [data])
-
   return (
     <div>
       <div className="imgwicons__headlinewrap">

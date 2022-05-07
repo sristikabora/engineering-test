@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(0deg, rgb(255 200 200 / 44%), rgb(255 255 255 / 89%)), url(/src/assets/images/pexels-arthur-krijgsman-4019754.jpg);
+  background: linear-gradient(0deg, #ffadb354, rgb(255 255 255 / 89%)), url(/src/assets/images/jason-goodman-vbxyFxlgpjM-unsplash.jpg);
   background-size: cover;
 }
 
@@ -11,6 +11,25 @@ button {
   min-height: 100vh;
 }
 
+.roll_application .activeroll-actionwrap {
+  justify-content: right;
+}
+
+.roll_application .linkToActivities {
+  display: flex;
+  align-items: center;
+}
+
+.roll_application .linkToActivities p {
+  font-size: 0.875rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
 .roll_application .rollList__wrap {
   border-radius: 10px;
   max-width: 900px;
@@ -20,9 +39,12 @@ button {
 .roll_application .rollDetails {
   border-radius: 10px 10px 0 0;
   background-color: #343f64;
-  padding: 10px 0;
+  padding: 30px;
   position: relative;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .roll_application .rollDetails h2,
@@ -30,6 +52,58 @@ button {
   text-align: center;
   font-size: 20px;
   color: white;
+  margin: 0;
+  font-weight: 200;
+}
+
+.roll_application .rollDetails ul {
+  display: flex;
+  column-gap: 20px;
+  color: white;
+  list-style: none;
+  margin: 0;
+}
+
+.roll_application .rollDetails li {
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.roll_application .rollDetails .present-total,
+.roll_application .rollDetails .late-total,
+.roll_application .rollDetails .absent-total,
+.roll_application .rollDetails .unmarked-total {
+  display: inline-block;
+  background-color: #13943b;
+  padding: 3px 10px;
+  border-radius: 30%;
+  margin-left: 10px;
+}
+
+.roll_application .rollDetails .late-total {
+  background-color: #f5a623;
+}
+
+.roll_application .rollDetails .absent-total {
+  background-color: #9b9b9b;
+}
+
+.roll_application .rollDetails .unmarked-total {
+  background-color: rgba(255, 69, 69, 0.923);
+}
+
+.roll_application .rollDetails .roll-time::before {
+  content: "";
+  background-image: url(/src/assets/images/calendar-free-icon-font.svg);
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  color: white;
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  margin-right: 10px;
+  top: 2px;
 }
 
 .roll_application .rollList__wrap .table {
@@ -39,7 +113,7 @@ button {
 }
 
 .roll_application .rollList__wrap .table .thead-dark th {
-  background-color: #2b4d6f;
+  background-color: #1b4f8f;
 }
 
 .roll_application .rollList__wrap table tbody {
@@ -64,10 +138,10 @@ button {
 .roll_application .imgwicons__headlinewrap .imgwicons__headline {
   color: #2b4d6f;
   text-transform: uppercase;
-  font-size: 40px;
   line-height: 1.6;
-  font-weight: bold;
   text-align: center;
+  font-weight: 200;
+  font-size: 60px;
 }
 
 .roll_application .imgwicons__headlinewrap .imgwicons__underline {

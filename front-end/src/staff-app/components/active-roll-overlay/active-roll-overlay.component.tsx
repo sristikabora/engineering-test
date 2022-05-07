@@ -35,7 +35,7 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
             <Button color="inherit" onClick={() => onItemClick("exit")}>
               Exit
             </Button>
-            <Link to="/staff/activity">
+            <Link to="/staff/activity" className="linkToActivities">
               <p color="inherit" style={{ marginLeft: Spacing.u2, color: "white" }} onClick={() => onItemClick("complete")}>
                 Complete
               </p>
