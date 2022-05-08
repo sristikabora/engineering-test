@@ -13,9 +13,9 @@ export const ActivityPage: React.FC = () => {
 
   return (
     <div>
-      <div className="imgwicons__headlinewrap">
-        <h1 className="imgwicons__headline">List Of All Rolls</h1>
-        <span className="imgwicons__underline"></span>
+      <div className="rollpage__headline-wrap">
+        <h1 className="rollpage__headline">List Of All Rolls</h1>
+        <span className="rollpage__underline"></span>
       </div>
       {data?.activity && (
         <>{data.activity.map((a) => (a.type === "roll" ? <RollList key={a.entity.id} id={a.entity.name} roll={a.entity.student_roll_states} date={a.date} /> : ""))}</>

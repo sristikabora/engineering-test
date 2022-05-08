@@ -5,6 +5,34 @@ body {
 
 button {
   outline: none !important;
+  border: none;
+}
+
+.toolbar__searchwrap {
+  display: flex;
+  align-items: center;
+}
+
+.toggleBar__search {
+  position: relative;
+}
+
+.toggleBar__search-input {
+  border: none;
+  padding-right: 25px;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.toggleBar__search-submit {
+  position: absolute;
+  right: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.toolbar__reset-icon {
+  max-width: 15px;
 }
 
 .roll_application {
@@ -120,22 +148,16 @@ button {
   background-color: #ffffffde !important;
 }
 
-.roll_application .imgwicons__headlinewrap {
+.roll_application .rollpage__headline-wrap {
   position: relative;
   padding-bottom: 20px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
   justify-content: center;
   margin: 40px auto;
 }
 
-.roll_application .imgwicons__headlinewrap .imgwicons__headline {
+.roll_application .rollpage__headline-wrap .rollpage__headline {
   color: #2b4d6f;
   text-transform: uppercase;
   line-height: 1.6;
@@ -144,7 +166,7 @@ button {
   font-size: 60px;
 }
 
-.roll_application .imgwicons__headlinewrap .imgwicons__underline {
+.roll_application .rollpage__headline-wrap .rollpage__underline {
   width: 176.25px;
   height: 5px;
   display: block;

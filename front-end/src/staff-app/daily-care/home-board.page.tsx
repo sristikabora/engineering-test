@@ -12,7 +12,7 @@ import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active
 import { RollInput } from "shared/models/roll"
 import { RolllStateType } from "shared/models/roll"
 
-export const HomeBoardPage: React.FC = (props) => {
+export const HomeBoardPage: React.FC = () => {
   const [isRollMode, setIsRollMode] = useState(false)
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
   const [sortOrder, setSortOrder] = useState("initial")
@@ -162,10 +162,24 @@ export const HomeBoardPage: React.FC = (props) => {
     } else return "unmark" as RolllStateType
   }
 
+  const resetToInitialList = () => {
+    if (data?.students) {
+      setCurrentList(data.students)
+    }
+  }
+
   return (
     <>
       <S.PageContainer>
-        <Toolbar onItemClick={onToolbarAction} sortorder={sortOrder} sortby={sortBy} handleSubmit={handleSubmit} currentStr={currentStr} setCurrentStr={setCurrentStr} />
+        <Toolbar
+          onItemClick={onToolbarAction}
+          sortorder={sortOrder}
+          sortby={sortBy}
+          handleSubmit={handleSubmit}
+          currentStr={currentStr}
+          setCurrentStr={setCurrentStr}
+          resetToInitialList={resetToInitialList}
+        />
 
         {loadState === "loading" && (
           <CenteredContainer>
@@ -208,22 +222,26 @@ interface ToolbarProps {
   handleSubmit: any
   currentStr: string
   setCurrentStr: any
+  resetToInitialList: () => void
 }
 
 const Toolbar: React.FC<ToolbarProps> = (props) => {
-  const { onItemClick, sortorder, sortby, handleSubmit, currentStr, setCurrentStr } = props
+  const { onItemClick, sortorder, sortby, handleSubmit, setCurrentStr, resetToInitialList } = props
 
   return (
     <S.ToolbarContainer>
       <S.Button onClick={() => onItemClick("sortToggle")}>{sortorder === "initial" || sortorder === "asc" ? "Ascending" : "Descending"}</S.Button>
       <S.Button onClick={() => onItemClick("sortBy")}>{sortby === "initial" || sortby === "first_name" ? "By First Name" : "By Last Name"}</S.Button>
-      <div>
-        <form onSubmit={handleSubmit}>
-          <input type="text" onChange={(event) => setCurrentStr(event.target.value)} id="searchedInput" placeholder="Search.." name="search" />
-          <button type="submit">
+      <div className="toolbar__searchwrap">
+        <form onSubmit={handleSubmit} className="toggleBar__search">
+          <input type="text" className="toggleBar__search-input" onChange={(event) => setCurrentStr(event.target.value)} id="searchedInput" placeholder="Search.." name="search" />
+          <button type="submit" className="toggleBar__search-submit">
             <i className="fa fa-search" style={{ color: "black" }}></i>
           </button>
         </form>
+        <S.Button onClick={() => resetToInitialList()}>
+          <img className="toolbar__reset-icon" src="http://localhost:3000/src/assets/images/undo-free-icon-font.svg" alt="reset-icon" />
+        </S.Button>
       </div>
       <S.Button onClick={() => onItemClick("roll")}>Start Roll</S.Button>
     </S.ToolbarContainer>
