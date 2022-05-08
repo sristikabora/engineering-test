@@ -3,40 +3,40 @@ body {
   background-size: cover;
 }
 
-button {
+.roll-application {
+  min-height: 100vh;
+}
+
+.roll-application button {
   outline: none !important;
   border: none;
 }
 
-.toolbar__searchwrap {
+.roll-application .toolbar__searchwrap {
   display: flex;
   align-items: center;
 }
 
-.toggleBar__search {
+.roll-application .toggleBar__search {
   position: relative;
 }
 
-.toggleBar__search-input {
+.roll-application .toggleBar__search-input {
   border: none;
   padding-right: 25px;
   padding-left: 10px;
   border-radius: 5px;
 }
 
-.toggleBar__search-submit {
+.roll-application .toggleBar__search-submit {
   position: absolute;
   right: 0;
   background-color: transparent;
   cursor: pointer;
 }
 
-.toolbar__reset-icon {
+.roll-application .toolbar__reset-icon {
   max-width: 15px;
-}
-
-.roll-application {
-  min-height: 100vh;
 }
 
 .roll-application .activeroll-actionwrap {
@@ -76,15 +76,15 @@ button {
   padding: 0 30px;
 }
 
-.attendancePercents__wrapper {
+.attendancepercents__wrapper {
   margin: 172px 0;
 }
 
-.attendancePercents__table {
+.attendancepercents__table {
   border-radius: 19px;
 }
 
-.attendancePercents__headline {
+.attendancepercents__headline {
   background-color: rgb(19 67 12);
   padding: 20px;
   margin-bottom: 5px;
@@ -94,35 +94,35 @@ button {
   font-weight: 600;
 }
 
-.attendancePercents__table thead {
+.attendancepercents__table thead {
   background-color: #343f63;
 }
 
-.attendancePercents__table tbody {
+.attendancepercents__table tbody {
   background-color: #ffffffba;
 }
 
-.attendancePercents__table th {
+.attendancepercents__table th {
   color: white;
 }
-.attendancePercents__table tbody th {
+.attendancepercents__table tbody th {
   color: #3a415d;
 }
-.attendancePercents__table td {
+.attendancepercents__table td {
   color: #3a415d;
 }
 
-.attendancePercents__table td:last-child {
+.attendancepercents__table td:last-child {
   text-align: center;
 }
 
-td[data-alert="yes"] {
+.roll-application td[data-alert="yes"] {
   background-color: rgba(255, 0, 0, 0.923);
   color: white;
   font-weight: 500;
 }
 
-.attendancePercents__table tbody tr:nth-of-type(odd) {
+.roll-application .attendancepercents__table tbody tr:nth-of-type(odd) {
   background-color: rgb(0 0 0 / 8%);
 }
 
@@ -283,7 +283,7 @@ td[data-alert="yes"] {
     flex-basis: 100%;
   }
 
-  .attendancePercents__wrapper {
+  .attendancepercents__wrapper {
     margin: 50px 0;
   }
 }

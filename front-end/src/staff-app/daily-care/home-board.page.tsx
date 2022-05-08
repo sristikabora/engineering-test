@@ -13,20 +13,22 @@ import { RollInput } from "shared/models/roll"
 import { RolllStateType } from "shared/models/roll"
 
 export const HomeBoardPage: React.FC = () => {
-  const [isRollMode, setIsRollMode] = useState(false)
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
+  const [setRole] = useApi<{ student: RollInput }>({ url: "save-roll" })
+
+  const [isRollMode, setIsRollMode] = useState(false)
   const [sortOrder, setSortOrder] = useState("initial")
   const [sortBy, setSortBy] = useState("first_name")
   const [currentList, setCurrentList] = useState([{ id: 0, first_name: "", last_name: "" }])
   const [currentStr, setCurrentStr] = useState("")
   const [rollStateListWithIds, setrollStateListWithIds] = useState([{ student_id: 0, roll_state: "initial" }])
   const [rollTotals, setRollTotals] = useState({ present: 0, absent: 0, late: 0 })
-  const [setRole] = useApi<{ student: RollInput }>({ url: "save-roll" })
 
   useEffect(() => {
     void getStudents()
   }, [getStudents])
 
+  //sets currentlist when data is loaded
   useEffect(() => {
     if (data != undefined) {
       let a = data.students
@@ -34,12 +36,14 @@ export const HomeBoardPage: React.FC = () => {
     }
   }, [data])
 
+  //componentWillUnmount
   useEffect(() => {
     return () => {
       setIsRollMode(false)
     }
   }, [])
 
+  //updates total of each roll state every time user updates a roll
   useEffect(() => {
     let present: number, absent: number, late: number
     present = absent = late = 0
@@ -56,15 +60,22 @@ export const HomeBoardPage: React.FC = () => {
     setRollTotals({ present: present, absent: absent, late: late })
   }, [rollStateListWithIds])
 
+  //sorts in Ascending by firstname or lastname indicated through parameter 'by'
   const sortAsc = function (list: any, by: string) {
     list.sort((a: any, b: any) => (a[by] > b[by] ? 1 : -1))
     return list
   }
+
+  //sorts in Descending by firstname or lastname indicated through parameter 'by'
   const sortDsc = function (list: any, by: string) {
     list.sort((a: any, b: any) => (a[by] < b[by] ? 1 : -1))
     return list
   }
 
+  //finds student by id
+  const search = (what: number, array: Array<{ student_id: number; roll_state: string }>) => array.find((element) => element.student_id === what)
+
+  //performs actions according to togglebar clicks and updates the currentList(the list from where the rendering takes place)
   const onToolbarAction = (action: ToolbarAction) => {
     if (action === "roll") {
       setIsRollMode(true)
@@ -90,6 +101,7 @@ export const HomeBoardPage: React.FC = () => {
     }
   }
 
+  //exits from roll-mode or completes a roll and saves the copy according to user action on roll overlay
   const onActiveRollAction = (action: ActiveRollAction) => {
     if (action === "exit") {
       setIsRollMode(false)
@@ -103,8 +115,7 @@ export const HomeBoardPage: React.FC = () => {
     }
   }
 
-  const search = (what: number, array: Array<{ student_id: number; roll_state: string }>) => array.find((element) => element.student_id === what)
-
+  //updates the rollstate of a student during an active roll session or adds new student with rollstate in rollStateListWithIds
   const rollLister = (roll: string, id: number) => {
     let list = rollStateListWithIds
     let listFiltered: Array<{ student_id: number; roll_state: string }> = list.filter(function (obj) {
@@ -119,6 +130,7 @@ export const HomeBoardPage: React.FC = () => {
     setrollStateListWithIds(listFiltered)
   }
 
+  //performs search by student name
   const handleSubmit = function (e: Event) {
     e.preventDefault()
     let newArr: Array<{ id: number; first_name: string; last_name: string }> = []
@@ -131,6 +143,7 @@ export const HomeBoardPage: React.FC = () => {
     setCurrentList(newArr)
   }
 
+  //filters students by click on different roll-state icons on overall
   const filterByOverlayBtn = (state: string) => {
     let a = data?.students
     if (state !== "all") {
@@ -153,6 +166,7 @@ export const HomeBoardPage: React.FC = () => {
     }
   }
 
+  //allows to keep the roll state icon color even after rerendering(which happens when we click on different state icons)
   const currentState = (id: number) => {
     const found = rollStateListWithIds.filter((r) => {
       return r.student_id === id
@@ -162,6 +176,7 @@ export const HomeBoardPage: React.FC = () => {
     } else return "unmark" as RolllStateType
   }
 
+  //resets on clicking reset button
   const resetToInitialList = () => {
     if (data?.students) {
       setCurrentList(data.students)
@@ -264,6 +279,7 @@ const S = {
     padding: 6px 14px;
     font-weight: ${FontWeight.strong};
     border-radius: ${BorderRadius.default};
+    flex-wrap: wrap;
   `,
   Button: styled(Button)`
     && {

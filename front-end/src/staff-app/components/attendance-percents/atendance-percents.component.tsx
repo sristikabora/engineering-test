@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { Person } from "shared/models/person"
 import { useApi } from "shared/hooks/use-api"
 import { Activity } from "shared/models/activity"
@@ -17,6 +17,7 @@ export const AttendancePercents: React.FC = () => {
     void getStudents()
   }, [getStudents])
 
+  //calculates overall attendance percentage
   const percentCalc = (id: number, action: string) => {
     let total: number = 0
     let present = 0
@@ -45,8 +46,8 @@ export const AttendancePercents: React.FC = () => {
 
   return (
     <>
-      <div className="attendancePercents__wrapper">
-        <p className="attendancePercents__headline">Overal Attendance</p>
+      <div className="attendancepercents__wrapper">
+        <p className="attendancepercents__headline">Overal Attendance</p>
         {(studentloadState === "loading" || activityloadState === "loading") && (
           <CenteredContainer>
             <FontAwesomeIcon icon="spinner" size="2x" spin />
@@ -54,12 +55,12 @@ export const AttendancePercents: React.FC = () => {
         )}
         {studentloadState === "loaded" && activityloadState === "loaded" && data?.students && data.students.length > 0 && (
           <>
-            <table className="table table-striped attendancePercents__table">
+            <table className="table table-striped attendancepercents__table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Handle</th>
+                  <th scope="col">Id</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">%</th>
                 </tr>
               </thead>
               <tbody>

@@ -12,20 +12,22 @@ interface Props {
 
 export const RollList: React.FC<Props> = ({ roll, date, id }) => {
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
+
   useEffect(() => {
     void getStudents()
   }, [getStudents])
 
+  //formats date to human readable
   const dateFormater = (date: Date) => {
     let formattedDate = new Date(date)
     return formattedDate.toDateString()
   }
 
+  //calculates total of each state to display on top of each table
   const calculate = (state: RolllStateType) => {
     let total: number = 0
     if (state === "unmark") {
       if (data) {
-        console.log(data.students.length, roll.length, "length")
         return data.students.length - roll.length
       }
     }

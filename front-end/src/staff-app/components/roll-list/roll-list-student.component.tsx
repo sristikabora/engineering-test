@@ -15,6 +15,7 @@ export const RollListStudent: React.FC<Props> = ({ state, id }) => {
     void getStudents()
   }, [getStudents])
 
+  //gets fullname according to id
   const getName = () => {
     const x = data?.students.find((s) => s.id === id)
     if (x) {

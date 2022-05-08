@@ -7,17 +7,10 @@ import { RolllStateType } from "shared/models/roll"
 
 interface Props {
   stateList: StateList[]
-  onItemClick?: (type: ItemType) => void
   size?: number
   filterByOverlayBtn: (type: string) => void
 }
-export const RollStateList: React.FC<Props> = ({ stateList, size = 14, onItemClick, filterByOverlayBtn }) => {
-  const onClick = (type: ItemType) => {
-    if (onItemClick) {
-      onItemClick(type)
-    }
-  }
-
+export const RollStateList: React.FC<Props> = ({ stateList, size = 14, filterByOverlayBtn }) => {
   return (
     <S.ListContainer>
       {stateList.map((s, i) => {
