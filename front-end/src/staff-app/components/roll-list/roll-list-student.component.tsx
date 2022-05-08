@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { Person } from "shared/models/person"
 import { useApi } from "shared/hooks/use-api"
 import { RollStateIcon } from "staff-app/components/roll-state/roll-state-icon.component"
-import { getToPathname } from "react-router/lib/router"
 import { RolllStateType } from "shared/models/roll"
 
 interface Props {
@@ -26,16 +25,15 @@ export const RollListStudent: React.FC<Props> = ({ state, id }) => {
   return (
     <>
       <tr>
-        <th scope="row">{id}</th>
-        {data?.students && (
+        {loadState === "loaded" && data?.students && (
           <>
+            <th scope="row">{id}</th>
             <td>{getName()}</td>
+            <td>
+              <RollStateIcon type={state} size={20} />
+            </td>
           </>
         )}
-
-        <td>
-          <RollStateIcon type={state} size={20} />
-        </td>
       </tr>
     </>
   )
