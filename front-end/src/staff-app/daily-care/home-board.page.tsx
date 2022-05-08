@@ -10,6 +10,7 @@ import { useApi } from "shared/hooks/use-api"
 import { StudentListTile } from "staff-app/components/student-list-tile/student-list-tile.component"
 import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active-roll-overlay/active-roll-overlay.component"
 import { RollInput } from "shared/models/roll"
+import { RolllStateType } from "shared/models/roll"
 
 export const HomeBoardPage: React.FC = (props) => {
   const [isRollMode, setIsRollMode] = useState(false)
@@ -152,6 +153,15 @@ export const HomeBoardPage: React.FC = (props) => {
     }
   }
 
+  const currentState = (id: number) => {
+    const found = rollStateListWithIds.filter((r) => {
+      return r.student_id === id
+    })
+    if (found && found.length === 1) {
+      return found[0].roll_state as RolllStateType
+    } else return "unmark" as RolllStateType
+  }
+
   return (
     <>
       <S.PageContainer>
@@ -166,7 +176,7 @@ export const HomeBoardPage: React.FC = (props) => {
         {loadState === "loaded" && data?.students && currentList.length > 0 && Object.keys(currentList[0]) && (
           <>
             {currentList.map((s) => (
-              <StudentListTile key={s.id} isRollMode={isRollMode} student={s} rollLister={rollLister} />
+              <StudentListTile key={s.id} isRollMode={isRollMode} student={s} rollLister={rollLister} currentState={currentState(s.id)} />
             ))}
           </>
         )}
